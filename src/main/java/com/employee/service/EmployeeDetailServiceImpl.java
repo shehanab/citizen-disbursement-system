@@ -22,6 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation for managing MaintenanceService
+ *
+ * @author Shehan
+ */
 @Service
 @Transactional
 public class EmployeeDetailServiceImpl implements EmployeeDetailService {
@@ -51,7 +56,7 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     public List<EmployeeDetailDto> getEmployeeDetailsBySalary(String salary) throws IOException {
         List<EmployeeDetailDto> employeeDetails = readEmployeeDetailsFromCSVs();
         LOGGER.debug("Returning {} of employee details", employeeDetails.size());
-        List<Employee> byLastName = employeeRepository.findByEmployeesBySalary(Double.valueOf(salary));
+        List<Employee> byLastName = employeeRepository.findEmployeesBySalary(Double.valueOf(salary));
         return byLastName.stream().map(i -> new EmployeeDetailDto(i.getName(), i.getSalary())).collect(Collectors.toList());
     }
 

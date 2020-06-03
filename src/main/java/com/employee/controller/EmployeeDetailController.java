@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * REST controller for managing employee data.
+ *
+ * @author Shehan
+ */
 @RestController
 @RequestMapping(value = "/api")
 public class EmployeeDetailController {
@@ -25,6 +30,11 @@ public class EmployeeDetailController {
     @Autowired
     private EmployeeDetailService employeeDetailService;
 
+    /**
+     * Method to fetch all the employee data
+     *
+     * @return list of employee details
+     */
     @GetMapping(value = "/getAllEmployeeDetails")
     public ResponseEntity<List<EmployeeDetailDto>> getAllEmployeeDetails() {
 
@@ -39,7 +49,12 @@ public class EmployeeDetailController {
         return new ResponseEntity<>(employeeDetails, HttpStatus.OK);
     }
 
-
+    /**
+     * Method to fetch employee data based on salary range
+     * @param salary employee salary
+     * @return list of employee details
+     * @throws IOException
+     */
     @GetMapping(value = "/getEmployeeBySalary/{salary}")
     public ResponseEntity<List<EmployeeDetailDto>> getEmployeeBySalary(final @PathVariable String salary) throws IOException {
 

@@ -7,6 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository maintaining CRUD operations of employees
+ * Spring Data JPA repository for the employee entity.
+ *
+ * @author Shehan
+ */
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, Long> {
 
@@ -15,6 +21,6 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> {
     Employee findById(long id);
 
     @Query("from Employee e where e.salary between 0 and :salary")
-    List<Employee> findByEmployeesBySalary(Double salary);
+    List<Employee> findEmployeesBySalary(Double salary);
 
 }
