@@ -1,2 +1,19 @@
 # citizen-disbursement-system
-citizen-disbursement-system mini project
+## citizen-disbursement-system mini project
+
+### Test Project
+
+Change the file locations in the properties according to following instructions...
+
+- File to be processed should be placed in a folder called input
+- Files that is already processed will be moved in to the folder called processed
+- Files with errors will be moved to a folder called error
+
+### You can view all the employee details in the db with the following get request
+
+http://localhost:8080/api/getAllEmployeeDetails
+
+### You can view all the employee details with less than given salary in the db with the following get request. 
+- Salary to be filtered with can be passed as a path variable
+
+http://localhost:8080/api/getEmployeeBySalary/4000
