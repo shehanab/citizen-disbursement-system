@@ -1,5 +1,5 @@
-# citizen-disbursement-system
-## citizen-disbursement-system mini project
+# employee-disbursement-system
+## employee-disbursement-system mini project
 
 ### Test Project
 
@@ -11,9 +11,9 @@ Change the file locations in the properties according to following instructions.
 
 ### You can view all the employee details in the db with the following get request
 
-http://localhost:8080/api/getAllEmployeeDetails
+http://localhost:8080/api/employees
 
 ### You can view all the employee details with less than given salary in the db with the following get request. 
-- Salary to be filtered with can be passed as a path variable
+- Salary Range to be filtered can be passed via query parameteres
 
-http://localhost:8080/api/getEmployeeBySalary/4000
+http://localhost:8080/api/employees?strtingSalary?0&endingSalary=4000
