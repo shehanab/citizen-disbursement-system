@@ -53,10 +53,10 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     }
 
     @Override
-    public List<EmployeeDetailDto> getEmployeeDetailsBySalary(String salary) throws IOException {
+    public List<EmployeeDetailDto> getEmployeeDetailsBySalary(String salaryFrom, String salaryTo) throws IOException {
         List<EmployeeDetailDto> employeeDetails = readEmployeeDetailsFromCSVs();
         LOGGER.debug("Returning {} of employee details", employeeDetails.size());
-        List<Employee> byLastName = employeeRepository.findEmployeesBySalary(Double.valueOf(salary));
+        List<Employee> byLastName = employeeRepository.findEmployeesBySalary(Double.valueOf(salaryFrom), Double.valueOf(salaryTo));
         return byLastName.stream().map(i -> new EmployeeDetailDto(i.getName(), i.getSalary())).collect(Collectors.toList());
     }
 

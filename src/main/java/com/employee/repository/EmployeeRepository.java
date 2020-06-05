@@ -16,11 +16,7 @@ import java.util.List;
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, Long> {
 
-    List<Employee> findByName(String name);
-
-    Employee findById(long id);
-
-    @Query("from Employee e where e.salary between 0 and :salary")
-    List<Employee> findEmployeesBySalary(Double salary);
+    @Query("from Employee e where e.salary between :fromSalary and :toSalary")
+    List<Employee> findEmployeesBySalary(Double fromSalary, Double toSalary);
 
 }

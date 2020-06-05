@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ public class EmployeeDetailController {
      *
      * @return list of employee details
      */
-    @GetMapping(value = "/getAllEmployeeDetails")
+    @GetMapping(value = "/employees")
     public ResponseEntity<List<EmployeeDetailDto>> getAllEmployeeDetails() {
 
         LOGGER.info("Received request to fetch employee details");
@@ -55,11 +52,13 @@ public class EmployeeDetailController {
      * @return list of employee details
      * @throws IOException
      */
-    @GetMapping(value = "/getEmployeeBySalary/{salary}")
-    public ResponseEntity<List<EmployeeDetailDto>> getEmployeeBySalary(final @PathVariable String salary) throws IOException {
+    @GetMapping(value = "/employees", params = {"salaryFrom, salaryTo"})
+    public ResponseEntity<List<EmployeeDetailDto>> getEmployeeBySalary(
+            final @RequestParam(value = "salaryFrom") String salaryFrom,
+            final @RequestParam(value = "salaryTo") String salaryTo) throws IOException {
 
-        LOGGER.info("Received request to fetch employee details by salary {}", salary);
-        List<EmployeeDetailDto> employeeDetails = employeeDetailService.getEmployeeDetailsBySalary(salary);
+        LOGGER.info("Received request to fetch employee details of salary between {} to {}", salaryFrom, salaryTo);
+        List<EmployeeDetailDto> employeeDetails = employeeDetailService.getEmployeeDetailsBySalary(salaryFrom, salaryTo);
         LOGGER.info("{} employees found", employeeDetails.size());
         return new ResponseEntity<>(employeeDetails, HttpStatus.OK);
     }

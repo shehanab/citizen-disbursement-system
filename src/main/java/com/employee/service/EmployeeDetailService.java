@@ -23,9 +23,10 @@ public interface EmployeeDetailService {
     /**
      * Method to fetch employee data based on salary range
      *
-     * @param salary employee salary
+     * @param salaryFrom employee salary
+     * @param salaryTo
      * @return list of employee details
      * @throws IOException
      */
-    List<EmployeeDetailDto> getEmployeeDetailsBySalary(String salary) throws IOException;
+    List<EmployeeDetailDto> getEmployeeDetailsBySalary(String salaryFrom, String salaryTo) throws IOException;
 }
