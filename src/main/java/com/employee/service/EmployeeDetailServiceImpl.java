@@ -46,7 +46,7 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public List<EmployeeDetailDto> getAllEmployeeDetails() throws IOException {
+    public List<EmployeeDetailDto> getAllEmployeeDetails() {
         List<EmployeeDetailDto> employeeDetails = new ArrayList<>();
         employeeRepository.findAll().forEach(i -> employeeDetails.add(new EmployeeDetailDto(i.getName(), i.getSalary())));
         LOGGER.debug("Returning {} of employee details", employeeDetails.size());
@@ -54,35 +54,36 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     }
 
     @Override
-    public List<EmployeeDetailDto> getEmployeeDetailsBySalary(String salaryFrom, String salaryTo) throws IOException {
-        List<EmployeeDetailDto> employeeDetails = readEmployeeDetailsFromCSVs();
-        LOGGER.debug("Returning {} of employee details", employeeDetails.size());
-        List<Employee> byLastName = employeeRepository.findEmployeesBySalary(Double.valueOf(salaryFrom), Double.valueOf(salaryTo));
-        return byLastName.stream().map(i -> new EmployeeDetailDto(i.getName(), i.getSalary())).collect(Collectors.toList());
+    public List<EmployeeDetailDto> getEmployeeDetailsBySalary(String salaryFrom, String salaryTo) {
+        //TODO: This should be done via a batch job
+        processEmployeeDetailsFromCSVs();
+
+        List<Employee> employeesBySalary = employeeRepository.findEmployeesBySalary(Double.valueOf(salaryFrom), Double.valueOf(salaryTo));
+        LOGGER.debug("Returning {} of employee details", employeesBySalary.size());
+        return employeesBySalary.stream().map(i -> new EmployeeDetailDto(i.getName(), i.getSalary())).collect(Collectors.toList());
     }
 
-    private List<EmployeeDetailDto> readEmployeeDetailsFromCSVs() throws IOException {
+    private void processEmployeeDetailsFromCSVs() {
         LOGGER.debug("Reading all the file from input folder {}", inputFileLocation);
         File folder = new File(inputFileLocation);
-        // readFromAllFiles(inputFileLocation + "\\EmployeeDetails.csv");
-        return readFromAllFiles(folder);
+        // processContentFromAllFiles(inputFileLocation + "\\EmployeeDetails.csv");
+        processContentFromAllFiles(folder);
     }
 
-    private List<EmployeeDetailDto> readFromAllFiles(File folder) {
-        List<EmployeeDetailDto> employeeDetails = new ArrayList<>();
-
+    private void processContentFromAllFiles(File folder) {
         File[] fileNames = folder.listFiles();
         if (fileNames == null) {
             LOGGER.debug("Files not found in input folder");
-            return new ArrayList<>();
         } else {
             LOGGER.debug("{} of files found in input folder", fileNames.length);
             for (File file : fileNames) {
                 if (file.isFile()) {
                     try {
-                        employeeDetails = readContent(file);
+                        List<Employee> newEmployeeList = processCSVContent(file);
+                        LOGGER.info("{} of new employees has been added.", newEmployeeList.size());
                         moveToProcessedFileLocation(file, inputFileLocation, processedFileLocation);
                     } catch (IOException e) {
+                        LOGGER.error("Error occurred while reading from files", e);
                         throw new RuntimeException(e);
                     }
                 } else {
@@ -90,11 +91,10 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                 }
             }
         }
-        return employeeDetails;
     }
 
-    private List<EmployeeDetailDto> readContent(File file) throws IOException {
-        List<EmployeeDetailDto> employeeDetails = new ArrayList<>();
+    private List<Employee> processCSVContent(File file) throws IOException {
+        List<Employee> employeeDetails = new ArrayList<>();
         LOGGER.debug("read file {}", file.getCanonicalPath());
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String strLine;
@@ -105,8 +105,9 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
                 if (lineCount != 0) {
                     LOGGER.debug("Line is - {}", strLine);
                     String[] split = strLine.split(",");
-                    employeeDetails.add(new EmployeeDetailDto(split[0], Double.parseDouble(split[1])));
-                    saveEmployee(new Employee(split[0], Double.parseDouble(split[1])));
+                    Employee newEmployee = new Employee(split[0], Double.parseDouble(split[1]));
+                    employeeDetails.add(newEmployee);
+                    saveEmployee(newEmployee);
                 }
                 lineCount++;
             }
@@ -124,25 +125,26 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     }
 
     private void saveEmployee(Employee employee) {
+        LOGGER.info("Saving a new employee {}", employee);
         if (employee != null) {
             employeeRepository.save(employee);
         }
     }
 
-
-    private void readFromAllFiles(String path) {
+    private void processContentFromAllFiles(String path) {
         Path filePath = Paths.get(path);
         if (Files.isRegularFile(filePath)) {
             try {
-                readContent(filePath);
-            } catch (Exception e) {
-                e.printStackTrace();
+                processCSVContent(filePath);
+            } catch (IOException e) {
+                LOGGER.error("Error occurred while reading from files", e);
+                throw new RuntimeException(e);
             }
         }
 
     }
 
-    private void readContent(Path filePath) throws IOException {
+    private void processCSVContent(Path filePath) throws IOException {
         List<String> fileList = Files.readAllLines(filePath);
         LOGGER.debug("" + fileList);
     }

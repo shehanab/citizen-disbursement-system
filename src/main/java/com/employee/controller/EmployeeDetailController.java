@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class EmployeeDetailController {
             employeeDetails = employeeDetailService.getAllEmployeeDetails();
             LOGGER.info("{} employees found", employeeDetails.size());
             return new ResponseEntity<>(employeeDetails, HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error("Error occurred while fetching employee details", e);
             return new ResponseEntity<>(employeeDetails, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -66,7 +65,7 @@ public class EmployeeDetailController {
             employeeDetails = employeeDetailService.getEmployeeDetailsBySalary(salaryFrom, salaryTo);
             LOGGER.info("{} employees found", employeeDetails.size());
             return new ResponseEntity<>(employeeDetails, HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error("Error occurred while fetching employee details", e);
             return new ResponseEntity<>(employeeDetails, HttpStatus.INTERNAL_SERVER_ERROR);
         }
