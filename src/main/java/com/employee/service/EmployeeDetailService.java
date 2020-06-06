@@ -18,13 +18,13 @@ public interface EmployeeDetailService {
      * @return list of employee details
      * @throws IOException
      */
-    List<EmployeeDetailDto> getEmployeeDetails() throws IOException;
+    List<EmployeeDetailDto> getAllEmployeeDetails() throws IOException;
 
     /**
      * Method to fetch employee data based on salary range
      *
-     * @param salaryFrom employee salary
-     * @param salaryTo
+     * @param salaryFrom employee starting salary
+     * @param salaryTo employee ending salary
      * @return list of employee details
      * @throws IOException
      */

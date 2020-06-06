@@ -1,5 +1,4 @@
-# employee-disbursement-system
-## employee-disbursement-system mini project
+# Employee-Disbursement-System mini project
 
 ### Test Project
 
@@ -14,6 +13,6 @@ Change the file locations in the properties according to following instructions.
 http://localhost:8080/api/employees
 
 ### You can view all the employee details with less than given salary in the db with the following get request. 
-- Salary Range to be filtered can be passed via query parameteres
+- Salary Range to be filtered can be passed via query parameters
 
-http://localhost:8080/api/employees?strtingSalary?0&endingSalary=4000
+http://localhost:8080/api/employees?fromSalary?=0&toSalary=4000

@@ -46,8 +46,9 @@ public class EmployeeDetailServiceImpl implements EmployeeDetailService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public List<EmployeeDetailDto> getEmployeeDetails() throws IOException {
-        List<EmployeeDetailDto> employeeDetails = readEmployeeDetailsFromCSVs();
+    public List<EmployeeDetailDto> getAllEmployeeDetails() throws IOException {
+        List<EmployeeDetailDto> employeeDetails = new ArrayList<>();
+        employeeRepository.findAll().forEach(i -> employeeDetails.add(new EmployeeDetailDto(i.getName(), i.getSalary())));
         LOGGER.debug("Returning {} of employee details", employeeDetails.size());
         return employeeDetails;
     }
